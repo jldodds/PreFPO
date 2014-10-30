@@ -1,0 +1,351 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1"/>
+<link href="coqdoc.css" rel="stylesheet" type="text/css"/>
+<title>reflect_example</title>
+</head>
+
+<body>
+
+<div id="page">
+
+<div id="header">
+</div>
+
+<div id="main">
+
+<h1 class="libtitle">Library reflect_example</h1>
+
+<div class="code">
+
+<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Our goal in this file is to simplify propositions
+    with and, or, True, False, as well as other arbitrary
+    propositions mixed in. We will do this by standard Ltac
+    programming and also by computational reflection. A
+    technique that is generally much faster, in part because
+    it produces very compact proof terms 
+
+<div class="paragraph"> </div>
+
+    <span class="inlinecode"><span class="id" type="var">example1</span></span> is easily solved by Coq
+</div>
+<div class="code">
+
+<br/>
+<span class="id" type="keyword">Lemma</span> <a name="easy_solve"><span class="id" type="lemma">easy_solve</span></a> : <span class="id" type="keyword">forall</span> (<span class="id" type="var">P</span> <span class="id" type="var">Q</span> : <span class="id" type="keyword">Prop</span>), <a class="idref" href="reflect_example.html#P"><span class="id" type="variable">P</span></a> -&gt; <a class="idref" href="http://coq.inria.fr/distrib/8.4pl4/stdlib/Coq.Init.Logic.html#:type_scope:x_'\/'_x"><span class="id" type="notation">(</span></a><a class="idref" href="http://coq.inria.fr/distrib/8.4pl4/stdlib/Coq.Init.Logic.html#True"><span class="id" type="inductive">True</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl4/stdlib/Coq.Init.Logic.html#:type_scope:x_'/\'_x"><span class="id" type="notation">/\</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl4/stdlib/Coq.Init.Logic.html#:type_scope:'~'_x"><span class="id" type="notation">~(</span></a><a class="idref" href="http://coq.inria.fr/distrib/8.4pl4/stdlib/Coq.Init.Logic.html#False"><span class="id" type="inductive">False</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl4/stdlib/Coq.Init.Logic.html#:type_scope:x_'/\'_x"><span class="id" type="notation">/\</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl4/stdlib/Coq.Init.Logic.html#:type_scope:x_'/\'_x"><span class="id" type="notation">(</span></a><a class="idref" href="http://coq.inria.fr/distrib/8.4pl4/stdlib/Coq.Init.Logic.html#:type_scope:'~'_x"><span class="id" type="notation">~</span></a><a class="idref" href="http://coq.inria.fr/distrib/8.4pl4/stdlib/Coq.Init.Logic.html#False"><span class="id" type="inductive">False</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl4/stdlib/Coq.Init.Logic.html#:type_scope:x_'\/'_x"><span class="id" type="notation">\/</span></a> <a class="idref" href="reflect_example.html#P"><span class="id" type="variable">P</span></a><a class="idref" href="http://coq.inria.fr/distrib/8.4pl4/stdlib/Coq.Init.Logic.html#:type_scope:x_'/\'_x"><span class="id" type="notation">)</span></a><a class="idref" href="http://coq.inria.fr/distrib/8.4pl4/stdlib/Coq.Init.Logic.html#:type_scope:'~'_x"><span class="id" type="notation">)</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl4/stdlib/Coq.Init.Logic.html#:type_scope:x_'/\'_x"><span class="id" type="notation">/\</span></a> <a class="idref" href="reflect_example.html#P"><span class="id" type="variable">P</span></a><a class="idref" href="http://coq.inria.fr/distrib/8.4pl4/stdlib/Coq.Init.Logic.html#:type_scope:x_'\/'_x"><span class="id" type="notation">)</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl4/stdlib/Coq.Init.Logic.html#:type_scope:x_'\/'_x"><span class="id" type="notation">\/</span></a> <a class="idref" href="reflect_example.html#Q"><span class="id" type="variable">Q</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl4/stdlib/Coq.Init.Logic.html#:type_scope:x_'/\'_x"><span class="id" type="notation">/\</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl4/stdlib/Coq.Init.Logic.html#False"><span class="id" type="inductive">False</span></a>.<br/>
+<span class="id" type="tactic">intros</span>. <span class="id" type="tactic">intuition</span>.<br/>
+<span class="id" type="keyword">Qed</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+The following goal can't be solved by intuition. It only unfolds
+    ~. It should be possible to make some progress on the goal
+    automatically though.
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" type="keyword">Goal</span> <span class="id" type="keyword">forall</span> (<span class="id" type="var">P</span> <span class="id" type="var">Q</span> : <span class="id" type="keyword">Prop</span>), <a class="idref" href="http://coq.inria.fr/distrib/8.4pl4/stdlib/Coq.Init.Logic.html#:type_scope:x_'\/'_x"><span class="id" type="notation">(</span></a><a class="idref" href="http://coq.inria.fr/distrib/8.4pl4/stdlib/Coq.Init.Logic.html#True"><span class="id" type="inductive">True</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl4/stdlib/Coq.Init.Logic.html#:type_scope:x_'/\'_x"><span class="id" type="notation">/\</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl4/stdlib/Coq.Init.Logic.html#:type_scope:'~'_x"><span class="id" type="notation">~(</span></a><a class="idref" href="http://coq.inria.fr/distrib/8.4pl4/stdlib/Coq.Init.Logic.html#False"><span class="id" type="inductive">False</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl4/stdlib/Coq.Init.Logic.html#:type_scope:x_'/\'_x"><span class="id" type="notation">/\</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl4/stdlib/Coq.Init.Logic.html#:type_scope:x_'/\'_x"><span class="id" type="notation">(</span></a><a class="idref" href="http://coq.inria.fr/distrib/8.4pl4/stdlib/Coq.Init.Logic.html#:type_scope:'~'_x"><span class="id" type="notation">~</span></a><a class="idref" href="http://coq.inria.fr/distrib/8.4pl4/stdlib/Coq.Init.Logic.html#False"><span class="id" type="inductive">False</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl4/stdlib/Coq.Init.Logic.html#:type_scope:x_'\/'_x"><span class="id" type="notation">\/</span></a> <a class="idref" href="reflect_example.html#P"><span class="id" type="variable">P</span></a><a class="idref" href="http://coq.inria.fr/distrib/8.4pl4/stdlib/Coq.Init.Logic.html#:type_scope:x_'/\'_x"><span class="id" type="notation">)</span></a><a class="idref" href="http://coq.inria.fr/distrib/8.4pl4/stdlib/Coq.Init.Logic.html#:type_scope:'~'_x"><span class="id" type="notation">)</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl4/stdlib/Coq.Init.Logic.html#:type_scope:x_'/\'_x"><span class="id" type="notation">/\</span></a> <a class="idref" href="reflect_example.html#P"><span class="id" type="variable">P</span></a><a class="idref" href="http://coq.inria.fr/distrib/8.4pl4/stdlib/Coq.Init.Logic.html#:type_scope:x_'\/'_x"><span class="id" type="notation">)</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl4/stdlib/Coq.Init.Logic.html#:type_scope:x_'\/'_x"><span class="id" type="notation">\/</span></a> <a class="idref" href="reflect_example.html#Q"><span class="id" type="variable">Q</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl4/stdlib/Coq.Init.Logic.html#:type_scope:x_'/\'_x"><span class="id" type="notation">/\</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl4/stdlib/Coq.Init.Logic.html#False"><span class="id" type="inductive">False</span></a>.<br/>
+<span class="id" type="tactic">intros</span>. <span class="id" type="tactic">intuition</span>.<br/>
+<span class="id" type="keyword">Abort</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+We define a few lemmas that we can use to do rewrites in a goal
+    these aren't all we need for arbitrary goals, but they 
+    work for our example  
+</div>
+<div class="code">
+
+<br/>
+<span class="id" type="keyword">Lemma</span> <a name="true_and_left"><span class="id" type="lemma">true_and_left</span></a> : <span class="id" type="keyword">forall</span> <span class="id" type="var">P</span>, <a class="idref" href="http://coq.inria.fr/distrib/8.4pl4/stdlib/Coq.Init.Logic.html#:type_scope:x_'<->'_x"><span class="id" type="notation">(</span></a><a class="idref" href="http://coq.inria.fr/distrib/8.4pl4/stdlib/Coq.Init.Logic.html#True"><span class="id" type="inductive">True</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl4/stdlib/Coq.Init.Logic.html#:type_scope:x_'/\'_x"><span class="id" type="notation">/\</span></a> <a class="idref" href="reflect_example.html#P"><span class="id" type="variable">P</span></a><a class="idref" href="http://coq.inria.fr/distrib/8.4pl4/stdlib/Coq.Init.Logic.html#:type_scope:x_'<->'_x"><span class="id" type="notation">)</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl4/stdlib/Coq.Init.Logic.html#:type_scope:x_'<->'_x"><span class="id" type="notation">&lt;-&gt;</span></a> <a class="idref" href="reflect_example.html#P"><span class="id" type="variable">P</span></a>.<br/>
+<span class="id" type="tactic">intuition</span>.<br/>
+<span class="id" type="keyword">Qed</span>.<br/>
+
+<br/>
+<span class="id" type="keyword">Lemma</span> <a name="false_and_right"><span class="id" type="lemma">false_and_right</span></a> : <span class="id" type="keyword">forall</span> <span class="id" type="var">P</span>, <a class="idref" href="http://coq.inria.fr/distrib/8.4pl4/stdlib/Coq.Init.Logic.html#:type_scope:x_'<->'_x"><span class="id" type="notation">(</span></a><a class="idref" href="reflect_example.html#P"><span class="id" type="variable">P</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl4/stdlib/Coq.Init.Logic.html#:type_scope:x_'/\'_x"><span class="id" type="notation">/\</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl4/stdlib/Coq.Init.Logic.html#False"><span class="id" type="inductive">False</span></a><a class="idref" href="http://coq.inria.fr/distrib/8.4pl4/stdlib/Coq.Init.Logic.html#:type_scope:x_'<->'_x"><span class="id" type="notation">)</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl4/stdlib/Coq.Init.Logic.html#:type_scope:x_'<->'_x"><span class="id" type="notation">&lt;-&gt;</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl4/stdlib/Coq.Init.Logic.html#False"><span class="id" type="inductive">False</span></a>.<br/>
+<span class="id" type="tactic">intuition</span>.<br/>
+<span class="id" type="keyword">Qed</span>.<br/>
+
+<br/>
+<span class="id" type="keyword">Lemma</span> <a name="false_or_left"><span class="id" type="lemma">false_or_left</span></a> : <span class="id" type="keyword">forall</span> <span class="id" type="var">P</span>, <a class="idref" href="http://coq.inria.fr/distrib/8.4pl4/stdlib/Coq.Init.Logic.html#:type_scope:x_'<->'_x"><span class="id" type="notation">(</span></a><a class="idref" href="reflect_example.html#P"><span class="id" type="variable">P</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl4/stdlib/Coq.Init.Logic.html#:type_scope:x_'\/'_x"><span class="id" type="notation">\/</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl4/stdlib/Coq.Init.Logic.html#False"><span class="id" type="inductive">False</span></a><a class="idref" href="http://coq.inria.fr/distrib/8.4pl4/stdlib/Coq.Init.Logic.html#:type_scope:x_'<->'_x"><span class="id" type="notation">)</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl4/stdlib/Coq.Init.Logic.html#:type_scope:x_'<->'_x"><span class="id" type="notation">&lt;-&gt;</span></a> <a class="idref" href="reflect_example.html#P"><span class="id" type="variable">P</span></a>.<br/>
+<span class="id" type="tactic">intuition</span>.<br/>
+<span class="id" type="keyword">Qed</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Coq uses an intuitionistic logic which means we can't distribute 
+   negation (~) using De Morgan's laws like we can in classical logic.
+   we can prove some special cases like the following though. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" type="keyword">Lemma</span> <a name="not_false_and_left"><span class="id" type="lemma">not_false_and_left</span></a> : <span class="id" type="keyword">forall</span> <span class="id" type="var">P</span>, (<a class="idref" href="http://coq.inria.fr/distrib/8.4pl4/stdlib/Coq.Init.Logic.html#:type_scope:'~'_x"><span class="id" type="notation">~(</span></a><a class="idref" href="http://coq.inria.fr/distrib/8.4pl4/stdlib/Coq.Init.Logic.html#False"><span class="id" type="inductive">False</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl4/stdlib/Coq.Init.Logic.html#:type_scope:x_'/\'_x"><span class="id" type="notation">/\</span></a> <a class="idref" href="reflect_example.html#P"><span class="id" type="variable">P</span></a><a class="idref" href="http://coq.inria.fr/distrib/8.4pl4/stdlib/Coq.Init.Logic.html#:type_scope:'~'_x"><span class="id" type="notation">)</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl4/stdlib/Coq.Init.Logic.html#:type_scope:x_'<->'_x"><span class="id" type="notation">&lt;-&gt;</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl4/stdlib/Coq.Init.Logic.html#True"><span class="id" type="inductive">True</span></a>).<br/>
+<span class="id" type="tactic">intuition</span>.<br/>
+<span class="id" type="keyword">Qed</span>.<br/>
+
+<br/>
+<span class="id" type="keyword">Lemma</span> <a name="not_false_true"><span class="id" type="lemma">not_false_true</span></a> : <a class="idref" href="http://coq.inria.fr/distrib/8.4pl4/stdlib/Coq.Init.Logic.html#:type_scope:x_'<->'_x"><span class="id" type="notation">(</span></a><a class="idref" href="http://coq.inria.fr/distrib/8.4pl4/stdlib/Coq.Init.Logic.html#:type_scope:'~'_x"><span class="id" type="notation">~</span></a><a class="idref" href="http://coq.inria.fr/distrib/8.4pl4/stdlib/Coq.Init.Logic.html#False"><span class="id" type="inductive">False</span></a><a class="idref" href="http://coq.inria.fr/distrib/8.4pl4/stdlib/Coq.Init.Logic.html#:type_scope:x_'<->'_x"><span class="id" type="notation">)</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl4/stdlib/Coq.Init.Logic.html#:type_scope:x_'<->'_x"><span class="id" type="notation">&lt;-&gt;</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl4/stdlib/Coq.Init.Logic.html#True"><span class="id" type="inductive">True</span></a>. <span class="id" type="tactic">intuition</span>. <span class="id" type="keyword">Qed</span>.<br/>
+<span class="id" type="keyword">Lemma</span> <a name="not_true_false"><span class="id" type="lemma">not_true_false</span></a> : <a class="idref" href="http://coq.inria.fr/distrib/8.4pl4/stdlib/Coq.Init.Logic.html#:type_scope:x_'<->'_x"><span class="id" type="notation">(</span></a><a class="idref" href="http://coq.inria.fr/distrib/8.4pl4/stdlib/Coq.Init.Logic.html#:type_scope:'~'_x"><span class="id" type="notation">~</span></a><a class="idref" href="http://coq.inria.fr/distrib/8.4pl4/stdlib/Coq.Init.Logic.html#True"><span class="id" type="inductive">True</span></a><a class="idref" href="http://coq.inria.fr/distrib/8.4pl4/stdlib/Coq.Init.Logic.html#:type_scope:x_'<->'_x"><span class="id" type="notation">)</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl4/stdlib/Coq.Init.Logic.html#:type_scope:x_'<->'_x"><span class="id" type="notation">&lt;-&gt;</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl4/stdlib/Coq.Init.Logic.html#False"><span class="id" type="inductive">False</span></a>. <span class="id" type="tactic">intuition</span>. <span class="id" type="keyword">Qed</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+We can add these lemmas to a hint database named <span class="inlinecode"><span class="id" type="var">ex</span></span>, so that 
+    coq can automatically try them all for us. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" type="keyword">Hint Rewrite</span> <a class="idref" href="reflect_example.html#true_and_left"><span class="id" type="lemma">true_and_left</span></a> : <span class="id" type="var">ex</span>.<br/>
+<span class="id" type="keyword">Hint Rewrite</span> <a class="idref" href="reflect_example.html#false_and_right"><span class="id" type="lemma">false_and_right</span></a> : <span class="id" type="var">ex</span>.<br/>
+<span class="id" type="keyword">Hint Rewrite</span> <a class="idref" href="reflect_example.html#false_or_left"><span class="id" type="lemma">false_or_left</span></a> : <span class="id" type="var">ex</span>.<br/>
+<span class="id" type="keyword">Hint Rewrite</span> <a class="idref" href="reflect_example.html#not_false_and_left"><span class="id" type="lemma">not_false_and_left</span></a>: <span class="id" type="var">ex</span>.<br/>
+
+<br/>
+
+<br/>
+<span class="id" type="keyword">Lemma</span> <a name="simplify_it"><span class="id" type="lemma">simplify_it</span></a> : <span class="id" type="keyword">forall</span> (<span class="id" type="var">P</span> <span class="id" type="var">Q</span> : <span class="id" type="keyword">Prop</span>), <a class="idref" href="http://coq.inria.fr/distrib/8.4pl4/stdlib/Coq.Init.Logic.html#:type_scope:x_'\/'_x"><span class="id" type="notation">(</span></a><a class="idref" href="http://coq.inria.fr/distrib/8.4pl4/stdlib/Coq.Init.Logic.html#True"><span class="id" type="inductive">True</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl4/stdlib/Coq.Init.Logic.html#:type_scope:x_'/\'_x"><span class="id" type="notation">/\</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl4/stdlib/Coq.Init.Logic.html#:type_scope:'~'_x"><span class="id" type="notation">~(</span></a><a class="idref" href="http://coq.inria.fr/distrib/8.4pl4/stdlib/Coq.Init.Logic.html#False"><span class="id" type="inductive">False</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl4/stdlib/Coq.Init.Logic.html#:type_scope:x_'/\'_x"><span class="id" type="notation">/\</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl4/stdlib/Coq.Init.Logic.html#:type_scope:x_'/\'_x"><span class="id" type="notation">(</span></a><a class="idref" href="http://coq.inria.fr/distrib/8.4pl4/stdlib/Coq.Init.Logic.html#:type_scope:'~'_x"><span class="id" type="notation">~</span></a><a class="idref" href="http://coq.inria.fr/distrib/8.4pl4/stdlib/Coq.Init.Logic.html#False"><span class="id" type="inductive">False</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl4/stdlib/Coq.Init.Logic.html#:type_scope:x_'\/'_x"><span class="id" type="notation">\/</span></a> <a class="idref" href="reflect_example.html#P"><span class="id" type="variable">P</span></a><a class="idref" href="http://coq.inria.fr/distrib/8.4pl4/stdlib/Coq.Init.Logic.html#:type_scope:x_'/\'_x"><span class="id" type="notation">)</span></a><a class="idref" href="http://coq.inria.fr/distrib/8.4pl4/stdlib/Coq.Init.Logic.html#:type_scope:'~'_x"><span class="id" type="notation">)</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl4/stdlib/Coq.Init.Logic.html#:type_scope:x_'/\'_x"><span class="id" type="notation">/\</span></a> <a class="idref" href="reflect_example.html#P"><span class="id" type="variable">P</span></a><a class="idref" href="http://coq.inria.fr/distrib/8.4pl4/stdlib/Coq.Init.Logic.html#:type_scope:x_'\/'_x"><span class="id" type="notation">)</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl4/stdlib/Coq.Init.Logic.html#:type_scope:x_'\/'_x"><span class="id" type="notation">\/</span></a> <a class="idref" href="reflect_example.html#Q"><span class="id" type="variable">Q</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl4/stdlib/Coq.Init.Logic.html#:type_scope:x_'/\'_x"><span class="id" type="notation">/\</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl4/stdlib/Coq.Init.Logic.html#False"><span class="id" type="inductive">False</span></a>.<br/>
+<span class="id" type="tactic">intros</span>.<br/>
+<span class="id" type="tactic">autorewrite</span> <span class="id" type="keyword">with</span> <span class="id" type="var">ex</span>. <span class="id" type="var">admit</span>.<br/>
+<span class="id" type="keyword">Qed</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+The proof term for simplify it is pretty large (around 50 lines). It
+    is easy to imagine that for larger goals and more complex reasoning
+    things could get much bigger much faster 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" type="keyword">Print</span> <span class="id" type="var">simplify_it</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+To fix this problem, we use proof by reflection. Proof by reflection
+    uses computation in Gallina, Coq's built-in programming languages to
+    do the proof work. Because the execution of a program is the proof,
+    the generated proof term will be smaller. 
+<div class="paragraph"> </div>
+
+ Gallina programs can't match on Prop because it is not an inductively
+    defined datatype. This means we need to use Ltac, the tactic programming
+    language of Coq, to transform our Prop into an expression that Gallina programs
+    can run on the sytax of these expressions is given below. The process of 
+    translation from Prop into a concrete syntax is called reification. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" type="keyword">Inductive</span> <a name="reified_prop"><span class="id" type="inductive">reified_prop</span></a> :=<br/>
+| <a name="ftrue"><span class="id" type="constructor">ftrue</span></a> | <a name="ffalse"><span class="id" type="constructor">ffalse</span></a><br/>
+| <a name="fand"><span class="id" type="constructor">fand</span></a> : <a class="idref" href="reflect_example.html#reified_prop"><span class="id" type="inductive">reified_prop</span></a> -&gt; <a class="idref" href="reflect_example.html#reified_prop"><span class="id" type="inductive">reified_prop</span></a> -&gt; <a class="idref" href="reflect_example.html#reified_prop"><span class="id" type="inductive">reified_prop</span></a><br/>
+| <a name="f_or"><span class="id" type="constructor">f_or</span></a> :  <a class="idref" href="reflect_example.html#reified_prop"><span class="id" type="inductive">reified_prop</span></a> -&gt; <a class="idref" href="reflect_example.html#reified_prop"><span class="id" type="inductive">reified_prop</span></a> -&gt; <a class="idref" href="reflect_example.html#reified_prop"><span class="id" type="inductive">reified_prop</span></a><br/>
+| <a name="fnot"><span class="id" type="constructor">fnot</span></a> : <a class="idref" href="reflect_example.html#reified_prop"><span class="id" type="inductive">reified_prop</span></a> -&gt; <a class="idref" href="reflect_example.html#reified_prop"><span class="id" type="inductive">reified_prop</span></a><br/>
+| <a name="finj"><span class="id" type="constructor">finj</span></a> : <span class="id" type="keyword">Prop</span> -&gt; <a class="idref" href="reflect_example.html#reified_prop"><span class="id" type="inductive">reified_prop</span></a>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Next we give the denotation of the syntax of <span class="inlinecode"><span class="id" type="var">reified_prop</span></span>. This is the connection
+    between the expressions of <span class="inlinecode"><span class="id" type="var">reified_prop</span></span> and the Props that we wish to reason
+    about in our proof. We give a constructor for each term we are interested in
+    as well as finj, a constructor that allows us to put arbitrary Props into 
+    expressions. The process of taking the denotation of a reified expression
+    is called reflecting it. 
+    The entire process of reifying a term, computing on it, and returning it
+    to it's original form is known as proof by reflection.
+     
+</div>
+<div class="code">
+
+<br/>
+<span class="id" type="keyword">Fixpoint</span> <a name="reified_propD"><span class="id" type="definition">reified_propD</span></a> (<span class="id" type="var">e</span> : <a class="idref" href="reflect_example.html#reified_prop"><span class="id" type="inductive">reified_prop</span></a>) := <br/>
+<span class="id" type="keyword">match</span> <a class="idref" href="reflect_example.html#e"><span class="id" type="variable">e</span></a> <span class="id" type="keyword">with</span><br/>
+| <a class="idref" href="reflect_example.html#ftrue"><span class="id" type="constructor">ftrue</span></a> =&gt; <a class="idref" href="http://coq.inria.fr/distrib/8.4pl4/stdlib/Coq.Init.Logic.html#True"><span class="id" type="inductive">True</span></a><br/>
+| <a class="idref" href="reflect_example.html#ffalse"><span class="id" type="constructor">ffalse</span></a> =&gt; <a class="idref" href="http://coq.inria.fr/distrib/8.4pl4/stdlib/Coq.Init.Logic.html#False"><span class="id" type="inductive">False</span></a><br/>
+| <a class="idref" href="reflect_example.html#fand"><span class="id" type="constructor">fand</span></a> <span class="id" type="var">l</span> <span class="id" type="var">r</span> =&gt; <a class="idref" href="reflect_example.html#reified_propD"><span class="id" type="definition">reified_propD</span></a> <span class="id" type="var">l</span> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl4/stdlib/Coq.Init.Logic.html#:type_scope:x_'/\'_x"><span class="id" type="notation">/\</span></a> <a class="idref" href="reflect_example.html#reified_propD"><span class="id" type="definition">reified_propD</span></a> <span class="id" type="var">r</span><br/>
+| <a class="idref" href="reflect_example.html#f_or"><span class="id" type="constructor">f_or</span></a> <span class="id" type="var">l</span> <span class="id" type="var">r</span> =&gt; <a class="idref" href="reflect_example.html#reified_propD"><span class="id" type="definition">reified_propD</span></a> <span class="id" type="var">l</span> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl4/stdlib/Coq.Init.Logic.html#:type_scope:x_'\/'_x"><span class="id" type="notation">\/</span></a> <a class="idref" href="reflect_example.html#reified_propD"><span class="id" type="definition">reified_propD</span></a> <span class="id" type="var">r</span><br/>
+| <a class="idref" href="reflect_example.html#fnot"><span class="id" type="constructor">fnot</span></a> <span class="id" type="var">p</span> =&gt; <a class="idref" href="http://coq.inria.fr/distrib/8.4pl4/stdlib/Coq.Init.Logic.html#:type_scope:'~'_x"><span class="id" type="notation">~</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl4/stdlib/Coq.Init.Logic.html#:type_scope:'~'_x"><span class="id" type="notation">(</span></a><a class="idref" href="reflect_example.html#reified_propD"><span class="id" type="definition">reified_propD</span></a> <span class="id" type="var">p</span><a class="idref" href="http://coq.inria.fr/distrib/8.4pl4/stdlib/Coq.Init.Logic.html#:type_scope:'~'_x"><span class="id" type="notation">)</span></a><br/>
+| <a class="idref" href="reflect_example.html#finj"><span class="id" type="constructor">finj</span></a> <span class="id" type="var">p</span> =&gt; <span class="id" type="var">p</span><br/>
+<span class="id" type="keyword">end</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+We use Ltac to take a Prop and turn it into a <span class="inlinecode"><span class="id" type="var">reified_prop</span></span> 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" type="keyword">Ltac</span> <span class="id" type="var">reified_prop_tac</span> <span class="id" type="var">G</span> :=<br/>
+<span class="id" type="keyword">match</span> <span class="id" type="var">G</span> <span class="id" type="keyword">with</span><br/>
+| <a class="idref" href="http://coq.inria.fr/distrib/8.4pl4/stdlib/Coq.Init.Logic.html#True"><span class="id" type="inductive">True</span></a> =&gt; <span class="id" type="var">ftrue</span><br/>
+| <a class="idref" href="http://coq.inria.fr/distrib/8.4pl4/stdlib/Coq.Init.Logic.html#False"><span class="id" type="inductive">False</span></a> =&gt; <span class="id" type="var">ffalse</span><br/>
+| ?<span class="id" type="var">A</span> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl4/stdlib/Coq.Init.Logic.html#:type_scope:x_'/\'_x"><span class="id" type="notation">/\</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl4/stdlib/Coq.Init.Logic.html#:type_scope:x_'/\'_x"><span class="id" type="notation">?</span></a><span class="id" type="var">B</span>  =&gt; <span class="id" type="keyword">let</span> <span class="id" type="var">Ar</span> := <span class="id" type="var">reified_prop_tac</span> <span class="id" type="var">A</span> <span class="id" type="keyword">in</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="keyword">let</span> <span class="id" type="var">Br</span> := <span class="id" type="var">reified_prop_tac</span> <span class="id" type="var">B</span> <span class="id" type="keyword">in</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="keyword">constr</span>:(<a class="idref" href="reflect_example.html#fand"><span class="id" type="constructor">fand</span></a> <span class="id" type="var">Ar</span> <span class="id" type="var">Br</span>)<br/>
+| ?<span class="id" type="var">A</span> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl4/stdlib/Coq.Init.Logic.html#:type_scope:x_'\/'_x"><span class="id" type="notation">\/</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl4/stdlib/Coq.Init.Logic.html#:type_scope:x_'\/'_x"><span class="id" type="notation">?</span></a><span class="id" type="var">B</span>  =&gt; <span class="id" type="keyword">let</span> <span class="id" type="var">Ar</span> := <span class="id" type="var">reified_prop_tac</span> <span class="id" type="var">A</span> <span class="id" type="keyword">in</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="keyword">let</span> <span class="id" type="var">Br</span> := <span class="id" type="var">reified_prop_tac</span> <span class="id" type="var">B</span> <span class="id" type="keyword">in</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="keyword">constr</span>:(<a class="idref" href="reflect_example.html#f_or"><span class="id" type="constructor">f_or</span></a> <span class="id" type="var">Ar</span> <span class="id" type="var">Br</span>)<br/>
+| <a class="idref" href="http://coq.inria.fr/distrib/8.4pl4/stdlib/Coq.Init.Logic.html#:type_scope:'~'_x"><span class="id" type="notation">~</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl4/stdlib/Coq.Init.Logic.html#:type_scope:'~'_x"><span class="id" type="notation">?</span></a><span class="id" type="var">A</span> =&gt; <span class="id" type="keyword">let</span> <span class="id" type="var">Ar</span> := <span class="id" type="var">reified_prop_tac</span> <span class="id" type="var">A</span> <span class="id" type="keyword">in</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="keyword">constr</span>:(<a class="idref" href="reflect_example.html#fnot"><span class="id" type="constructor">fnot</span></a> <span class="id" type="var">Ar</span>)<br/>
+| ?<span class="id" type="var">A</span> =&gt; <span class="id" type="keyword">constr</span>:(<a class="idref" href="reflect_example.html#finj"><span class="id" type="constructor">finj</span></a> <span class="id" type="var">A</span>)<br/>
+<span class="id" type="keyword">end</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Our reification tactic runs <span class="inlinecode"><span class="id" type="var">reified_prop_tac</span></span> and changes the goal
+    out for the denotation function applied to the reification. 
+    Ideally reified_propD and reified_prop_tac will be inverse of eachother.
+    if they aren't this tactic might fail. 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" type="keyword">Ltac</span> <span class="id" type="var">reify</span> :=<br/>
+<span class="id" type="keyword">match</span> <span class="id" type="keyword">goal</span> <span class="id" type="keyword">with</span><br/>
+[ |- ?<span class="id" type="var">G</span> ] =&gt; <span class="id" type="keyword">let</span> <span class="id" type="var">reif</span> := <span class="id" type="var">reified_prop_tac</span> <span class="id" type="var">G</span> <span class="id" type="keyword">in</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="tactic">change</span> ?<span class="id" type="var">G</span> <span class="id" type="keyword">with</span> (<a class="idref" href="reflect_example.html#reified_propD"><span class="id" type="definition">reified_propD</span></a> <span class="id" type="var">reif</span>)<br/>
+<span class="id" type="keyword">end</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Now we write our function to simplify our reified Props. 
+    the result of this function is a possibly-simplified reified Prop
+</div>
+<div class="code">
+
+<br/>
+<span class="id" type="keyword">Fixpoint</span> <a name="simplify_fprop"><span class="id" type="definition">simplify_fprop</span></a> <span class="id" type="var">e</span> := <br/>
+<span class="id" type="keyword">match</span> <a class="idref" href="reflect_example.html#e"><span class="id" type="variable">e</span></a> <span class="id" type="keyword">with</span><br/>
+| <a class="idref" href="reflect_example.html#ftrue"><span class="id" type="constructor">ftrue</span></a> =&gt; <a class="idref" href="reflect_example.html#ftrue"><span class="id" type="constructor">ftrue</span></a><br/>
+| <a class="idref" href="reflect_example.html#ffalse"><span class="id" type="constructor">ffalse</span></a> =&gt; <a class="idref" href="reflect_example.html#ffalse"><span class="id" type="constructor">ffalse</span></a><br/>
+| <a class="idref" href="reflect_example.html#fand"><span class="id" type="constructor">fand</span></a> <span class="id" type="var">l</span> <span class="id" type="var">r</span> =&gt; <span class="id" type="keyword">match</span> (<a class="idref" href="reflect_example.html#simplify_fprop"><span class="id" type="definition">simplify_fprop</span></a> <span class="id" type="var">l</span>), (<a class="idref" href="reflect_example.html#simplify_fprop"><span class="id" type="definition">simplify_fprop</span></a> <span class="id" type="var">r</span>) <span class="id" type="keyword">with</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| <a class="idref" href="reflect_example.html#ftrue"><span class="id" type="constructor">ftrue</span></a>, <span class="id" type="var">p</span> | <span class="id" type="var">p</span>, <a class="idref" href="reflect_example.html#ftrue"><span class="id" type="constructor">ftrue</span></a> =&gt; <span class="id" type="var">p</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| <a class="idref" href="reflect_example.html#ffalse"><span class="id" type="constructor">ffalse</span></a>, <span class="id" type="var">_</span> | <span class="id" type="var">_</span>, <a class="idref" href="reflect_example.html#ffalse"><span class="id" type="constructor">ffalse</span></a> =&gt; <a class="idref" href="reflect_example.html#ffalse"><span class="id" type="constructor">ffalse</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" type="var">_</span>, <span class="id" type="var">_</span> =&gt; <a class="idref" href="reflect_example.html#e"><span class="id" type="variable">e</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="keyword">end</span><br/>
+| <a class="idref" href="reflect_example.html#f_or"><span class="id" type="constructor">f_or</span></a> <span class="id" type="var">l</span> <span class="id" type="var">r</span> =&gt; <span class="id" type="keyword">match</span> (<a class="idref" href="reflect_example.html#simplify_fprop"><span class="id" type="definition">simplify_fprop</span></a> <span class="id" type="var">l</span>), (<a class="idref" href="reflect_example.html#simplify_fprop"><span class="id" type="definition">simplify_fprop</span></a> <span class="id" type="var">r</span>) <span class="id" type="keyword">with</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| <a class="idref" href="reflect_example.html#ftrue"><span class="id" type="constructor">ftrue</span></a>, <span class="id" type="var">p</span> | <span class="id" type="var">p</span>, <a class="idref" href="reflect_example.html#ftrue"><span class="id" type="constructor">ftrue</span></a> =&gt; <a class="idref" href="reflect_example.html#ftrue"><span class="id" type="constructor">ftrue</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| <a class="idref" href="reflect_example.html#ffalse"><span class="id" type="constructor">ffalse</span></a>, <span class="id" type="var">p</span> | <span class="id" type="var">p</span>, <a class="idref" href="reflect_example.html#ffalse"><span class="id" type="constructor">ffalse</span></a> =&gt; <span class="id" type="var">p</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| <span class="id" type="var">_</span>, <span class="id" type="var">_</span> =&gt; <a class="idref" href="reflect_example.html#e"><span class="id" type="variable">e</span></a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="keyword">end</span><br/>
+| <a class="idref" href="reflect_example.html#fnot"><span class="id" type="constructor">fnot</span></a> (<a class="idref" href="reflect_example.html#fand"><span class="id" type="constructor">fand</span></a> <a class="idref" href="reflect_example.html#ffalse"><span class="id" type="constructor">ffalse</span></a> <span class="id" type="var">p</span>) | <a class="idref" href="reflect_example.html#fnot"><span class="id" type="constructor">fnot</span></a> (<a class="idref" href="reflect_example.html#fand"><span class="id" type="constructor">fand</span></a> <span class="id" type="var">p</span> <a class="idref" href="reflect_example.html#ffalse"><span class="id" type="constructor">ffalse</span></a>) =&gt; <a class="idref" href="reflect_example.html#ftrue"><span class="id" type="constructor">ftrue</span></a><br/>
+| <span class="id" type="var">_</span> =&gt; <a class="idref" href="reflect_example.html#e"><span class="id" type="variable">e</span></a> <span class="id" type="keyword">end</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Now we prove a soundness lemma that allows us to replace
+    a reified goal with a simplified reified goal 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" type="keyword">Ltac</span> <span class="id" type="var">prove_sdns</span> <span class="id" type="var">e1</span> <span class="id" type="var">e2</span> :=<br/>
+<span class="id" type="tactic">destruct</span> (<span class="id" type="var">e1</span>) <span class="id" type="var">eqn</span> :<span class="id" type="var">Heqr</span>; <span class="id" type="tactic">simpl</span> <span class="id" type="keyword">in</span> *; <span class="id" type="tactic">auto</span>;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="tactic">destruct</span> (<span class="id" type="var">e2</span>) <span class="id" type="var">eqn</span> : ? ; <span class="id" type="tactic">simpl</span> <span class="id" type="keyword">in</span> *; <span class="id" type="tactic">auto</span>;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="tactic">try</span> <span class="id" type="tactic">rewrite</span> <span class="id" type="var">Heqr</span> <span class="id" type="keyword">in</span> *; <span class="id" type="tactic">simpl</span> <span class="id" type="keyword">in</span> *; <span class="id" type="tactic">intuition</span>.<br/>
+
+<br/>
+<span class="id" type="keyword">Lemma</span> <a name="simplify_fprop_sound"><span class="id" type="lemma">simplify_fprop_sound</span></a> : <span class="id" type="keyword">forall</span> <span class="id" type="var">e</span>,<br/>
+<a class="idref" href="reflect_example.html#reified_propD"><span class="id" type="definition">reified_propD</span></a> (<a class="idref" href="reflect_example.html#simplify_fprop"><span class="id" type="definition">simplify_fprop</span></a> <a class="idref" href="reflect_example.html#e"><span class="id" type="variable">e</span></a>) -&gt; <a class="idref" href="reflect_example.html#reified_propD"><span class="id" type="definition">reified_propD</span></a> <a class="idref" href="reflect_example.html#e"><span class="id" type="variable">e</span></a>.<br/>
+<span class="id" type="keyword">Proof</span>.<br/>
+<span class="id" type="tactic">intros</span>. <span class="id" type="tactic">induction</span> <span class="id" type="var">e</span>; <span class="id" type="tactic">auto</span>;<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">solve</span> [<span class="id" type="var">prove_sdns</span> (<a class="idref" href="reflect_example.html#simplify_fprop"><span class="id" type="definition">simplify_fprop</span></a> <span class="id" type="var">e1</span>) (<a class="idref" href="reflect_example.html#simplify_fprop"><span class="id" type="definition">simplify_fprop</span></a> <span class="id" type="var">e2</span>) | <br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="tactic">destruct</span> <span class="id" type="var">e</span>; <span class="id" type="tactic">auto</span>; <span class="id" type="tactic">simpl</span> <span class="id" type="keyword">in</span> *; <span class="id" type="var">prove_sdns</span> <span class="id" type="var">e1</span> <span class="id" type="var">e2</span>].<br/>
+<span class="id" type="keyword">Qed</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+We can now use our reflective procedure to simplify the goal 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" type="keyword">Lemma</span> <a name="example2"><span class="id" type="lemma">example2</span></a> : <span class="id" type="keyword">forall</span> (<span class="id" type="var">P</span> <span class="id" type="var">Q</span> : <span class="id" type="keyword">Prop</span>), <a class="idref" href="http://coq.inria.fr/distrib/8.4pl4/stdlib/Coq.Init.Logic.html#:type_scope:x_'\/'_x"><span class="id" type="notation">(</span></a><a class="idref" href="http://coq.inria.fr/distrib/8.4pl4/stdlib/Coq.Init.Logic.html#True"><span class="id" type="inductive">True</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl4/stdlib/Coq.Init.Logic.html#:type_scope:x_'/\'_x"><span class="id" type="notation">/\</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl4/stdlib/Coq.Init.Logic.html#:type_scope:'~'_x"><span class="id" type="notation">~(</span></a><a class="idref" href="http://coq.inria.fr/distrib/8.4pl4/stdlib/Coq.Init.Logic.html#False"><span class="id" type="inductive">False</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl4/stdlib/Coq.Init.Logic.html#:type_scope:x_'/\'_x"><span class="id" type="notation">/\</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl4/stdlib/Coq.Init.Logic.html#:type_scope:x_'/\'_x"><span class="id" type="notation">(</span></a><a class="idref" href="http://coq.inria.fr/distrib/8.4pl4/stdlib/Coq.Init.Logic.html#:type_scope:'~'_x"><span class="id" type="notation">~</span></a><a class="idref" href="http://coq.inria.fr/distrib/8.4pl4/stdlib/Coq.Init.Logic.html#False"><span class="id" type="inductive">False</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl4/stdlib/Coq.Init.Logic.html#:type_scope:x_'\/'_x"><span class="id" type="notation">\/</span></a> <a class="idref" href="reflect_example.html#P"><span class="id" type="variable">P</span></a><a class="idref" href="http://coq.inria.fr/distrib/8.4pl4/stdlib/Coq.Init.Logic.html#:type_scope:x_'/\'_x"><span class="id" type="notation">)</span></a><a class="idref" href="http://coq.inria.fr/distrib/8.4pl4/stdlib/Coq.Init.Logic.html#:type_scope:'~'_x"><span class="id" type="notation">)</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl4/stdlib/Coq.Init.Logic.html#:type_scope:x_'/\'_x"><span class="id" type="notation">/\</span></a> <a class="idref" href="reflect_example.html#P"><span class="id" type="variable">P</span></a><a class="idref" href="http://coq.inria.fr/distrib/8.4pl4/stdlib/Coq.Init.Logic.html#:type_scope:x_'\/'_x"><span class="id" type="notation">)</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl4/stdlib/Coq.Init.Logic.html#:type_scope:x_'\/'_x"><span class="id" type="notation">\/</span></a> <a class="idref" href="reflect_example.html#Q"><span class="id" type="variable">Q</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl4/stdlib/Coq.Init.Logic.html#:type_scope:x_'/\'_x"><span class="id" type="notation">/\</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl4/stdlib/Coq.Init.Logic.html#False"><span class="id" type="inductive">False</span></a>.<br/>
+<span class="id" type="tactic">intros</span>.<br/>
+</div>
+
+<div class="doc">
+We use our tactic to reify the goal, replacing it with something
+    we can run a program on 
+</div>
+<div class="code">
+<span class="id" type="var">reify</span>.<br/>
+</div>
+
+<div class="doc">
+We apply our soundness lemma, letting us put the computation
+    we wish to run into the goal 
+</div>
+<div class="code">
+<span class="id" type="tactic">apply</span> <a class="idref" href="reflect_example.html#simplify_fprop_sound"><span class="id" type="lemma">simplify_fprop_sound</span></a>.<br/>
+</div>
+
+<div class="doc">
+We simultaneously run the computation and evaluate the denotation
+    function by calling vm_compute. vm_compute compiles code to very
+    quickly perform computation 
+</div>
+<div class="code">
+<span class="id" type="keyword">vm_compute</span>.<br/>
+<span class="id" type="var">admit</span>.<br/>
+<span class="id" type="keyword">Qed</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+The resulting proof term is much smaller (around 16 lines). Most of it is used
+    to print the original term and the reified term to show that
+    there is a conversion between the two, so the size is always approximately
+    linear in the size of the goal being simplified 
+</div>
+<div class="code">
+
+<br/>
+<span class="id" type="keyword">Print</span> <span class="id" type="var">example2</span>.<br/>
+</div>
+</div>
+
+<div id="footer">
+<hr/><a href="index.html">Index</a><hr/>This page has been generated by <a href="http://coq.inria.fr/">coqdoc</a>
+</div>
+
+</div>
+
+</body>
+</html>
