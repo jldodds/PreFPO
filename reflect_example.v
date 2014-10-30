@@ -5,9 +5,13 @@ Require Import Coq.Setoids.Setoid.
 Require Import Coq.Logic.Classical_Prop.
 (* end hide *)
 
-(** This example builds on Adam Chlipala's CPDT chapter 
-    on reflection:
-    http://adam.chlipala.net/cpdt/html/Reflection.html *)
+(** This example builds on part of Adam Chlipala's CPDT chapter 
+    on reflection: http://adam.chlipala.net/cpdt/html/Reflection.html
+    it is meant to be stanalone but is not as in-depth. If you'd
+    like to learn more, his chapter is a great place to continue.
+    If you read this first, you can continue in the subsection called
+    A Smarter Tautology Solver. 
+    *)
 
 (** Our goal in this file is to simplify propositions
     with and, or, True, False, as well as other arbitrary
